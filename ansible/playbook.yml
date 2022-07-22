@@ -14,7 +14,36 @@
         - zsh
         - htop
         - git
+        - python3-virtualenv
         update_cache: yes
+
+    - name: Install fastAPI into the specified (virtualenv)
+      pip:
+        name: 
+          - fastapi
+          - "uvicorn[standard]"
+        virtualenv: /opt/test_venv
+
+    - name: create app dir
+      file:
+        path: /opt/app
+        state: directory
+
+    - name: copy app files
+      copy:
+        src: app/main.py
+        dest: /opt/app/main.py
+
+    - name: install app systemd file
+      copy:
+        src: main_app.service
+        dest: /etc/systemd/system/main_app.service
+
+    - name: Make sure a service unit is running
+      systemd:
+        state: started
+        name: main_app
+        daemon_reload: yes
 
     - name: Set authorized key for user root copying it from current user
       authorized_key:
@@ -26,14 +55,6 @@
       apt:
        name: ['nginx']
        state: latest
-
-    - name: "create www directory"
-      file:
-        path: /var/www/{{ domain }}
-        state: directory
-        mode: '0775'
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
 
     - name: delete default nginx site
       file:

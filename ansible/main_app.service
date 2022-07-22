@@ -1,0 +1,9 @@
+[Unit]
+Description="test application"
+
+[Service]
+WorkingDirectory=/opt/app
+ExecStart=/opt/test_venv/bin/uvicorn main:app --reload --port 5000
+
+[Install]
+WantedBy=multi-user.target
