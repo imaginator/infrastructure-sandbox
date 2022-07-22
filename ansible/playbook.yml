@@ -22,11 +22,6 @@
         state: present
         key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id.pub') }}"
 
-
-
-
-
-
     - name: "install nginx"
       apt:
        name: ['nginx']
